@@ -38,9 +38,37 @@ function App() {
           </>
         } />
         <Route path="/detail" element={<Detail />} />
+        <Route path="*" element={<div>404 오류 페이지</div>} />
+
+        <Route path="/about" element={<About />}>
+          <Route path="member" element={<div>멤버</div>} />
+          <Route path="location" element={<div>위치정보</div>} />
+        </Route>
+
+        <Route path="/event" element={<EventPage />}>
+          <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>}></Route>
+          <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
+        </Route>
       </Routes>
-    </div>
+
+    </div >
   );
+}
+function EventPage() {
+  return (
+    <div>
+      <h4>오늘의 이벤트</h4>
+      <Outlet></Outlet>
+    </div>
+  )
+}
+function About() {
+  return (
+    <div>
+      <h4>회사정보</h4>
+      <Outlet></Outlet>
+    </div>
+  )
 }
 // 축약하고 싶은 UI 컴포넌트화 하기
 function Card(props) { // props 파라미터
