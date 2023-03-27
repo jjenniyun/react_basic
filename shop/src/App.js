@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { createContext, useState } from "react";
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
 import data from './data.js';
 import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import Cart from './routes/Cart.js';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -59,6 +60,8 @@ function App() {
           <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>}></Route>
           <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
         </Route>
+
+        <Route path='/cart' element={<Cart />} />
       </Routes>
 
     </div >
