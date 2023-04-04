@@ -15,7 +15,7 @@ let YellowBtn = styled.button`
 function Detail(props) {
 
     let { id } = useParams();
-    let look_sort = props.shoes.find((x) => x.id == id); // array자료.id == url입력한번호
+    let look_sort = props.shoes.find(x => x.id == id); // array자료.id == url입력한번호
     let [count, setCount] = useState(0);
     let [alert, setAlert] = useState(true);
     let [num, setNum] = useState('');
@@ -24,6 +24,17 @@ function Detail(props) {
     let dispatch = useDispatch()
 
     useEffect(() => {
+
+        let getout = localStorage.getItem('watched')
+        getout = JSON.parse(getout)
+        getout.push(look_sort.id) // array 자료 추가
+        getout = new Set(getout)
+        getout = Array.from(getout)
+        localStorage.setItem('watched', JSON.stringify(getout))
+    }, [])
+
+    useEffect(() => {
+
         let timer = setTimeout(() => { setAlert(false) }, 2000);
         let end2 = setTimeout(() => { setFade2('end') }, 1000);
 

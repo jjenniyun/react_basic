@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
 import data from './data.js';
@@ -6,12 +6,29 @@ import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import Cart from './routes/Cart.js';
+import { useQuery } from 'react-query'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
+  useEffect(() => {
+
+    localStorage.setItem('watched', JSON.stringify([]))
+  }, [])
+
+  //console.log(JSON.parse(comeout).name);
+
   let [shoes, setShoes] = useState(data);
+  //let [storage] = useState([10, 11, 12]);
   let navigate = useNavigate(); // 페이지 이동
+
+  let result = useQuery('작명', () =>
+    axios.get('https://codingapple1.github.io/userdata.json')
+      .then((a) => {
+        console.log('요청됨')
+        return a.data
+      })
+  )
 
   return (
     <div className="App">
@@ -22,6 +39,11 @@ function App() {
             <Nav.Link onClick={() => { navigate('/') }}>Home</Nav.Link>
             <Nav.Link href="#features">Clothes</Nav.Link>
             <Nav.Link onClick={() => { navigate('/detail') }}>Detail</Nav.Link>
+          </Nav>
+          <Nav className='ms-auto'>
+            {result.isLoading && '로딩중'}
+            {result.error && '에러남'}
+            {result.data && result.data.name}
           </Nav>
         </Container>
       </Navbar>
