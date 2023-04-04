@@ -1,18 +1,19 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, lazy, Suspense } from "react";
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
 import data from './data.js';
-import Detail from './routes/Detail.js';
+//import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
-import Cart from './routes/Cart.js';
 import { useQuery } from 'react-query'
+//import Cart from './routes/Cart.js';
+const Detail = lazy(() => import('./routes/Detail.js'))
+const Cart = lazy(() => import('./routes/Cart.js'))
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
   useEffect(() => {
-
     localStorage.setItem('watched', JSON.stringify([]))
   }, [])
 
@@ -22,17 +23,16 @@ function App() {
   //let [storage] = useState([10, 11, 12]);
   let navigate = useNavigate(); // 페이지 이동
 
-  let result = useQuery('작명', () =>
-    axios.get('https://codingapple1.github.io/userdata.json')
-      .then((a) => {
-        console.log('요청됨')
-        return a.data
-      })
+  let result = useQuery(['작명'], () =>
+    axios.get('https://codingapple1.github.io/userdata.json').then((a) => {
+      console.log('요청됨')
+      return a.data
+    })
   )
 
   return (
     <div className="App">
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="light" variant="light">
         <Container>
           <Navbar.Brand href="#home">FastAnd</Navbar.Brand>
           <Nav className="me-auto">
@@ -48,43 +48,47 @@ function App() {
         </Container>
       </Navbar>
 
-      <Routes>
-        <Route path="/" element={
-          <>
-            <div className="main-bg"></div>
-            <div className="container">
-              <div className="row">
-                {shoes.map((a, i) => {
-                  return <Card shoes={shoes[i]} i={i} ></Card>
-                })}
+      <Suspense fallback={<div>로딩중임</div>}>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className="main-bg"></div>
+              <div className="container">
+                <div className="row">
+                  {shoes.map((a, i) => {
+                    return <Card shoes={shoes[i]} i={i} ></Card>
+                  })}
+                </div>
               </div>
-            </div>
-            <button onClick={() => {
-              axios.get('https://codingapple1.github.io/shop/data2.json').then((result) => {
-                let copy = [...shoes, ...result.data];
-                setShoes(copy);
-              })
-                .catch(() => {
-                  console.log('실패')
+              <button onClick={() => {
+                axios.get('https://codingapple1.github.io/shop/data2.json').then((result) => {
+                  let copy = [...shoes, ...result.data];
+                  setShoes(copy);
                 })
-            }}>더보기</button>
-          </>
-        } />
-        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
-        <Route path="*" element={<div>404 오류 페이지</div>} />
+                  .catch(() => {
+                    console.log('실패')
+                  })
+              }}>더보기</button>
+            </>
+          } />
+          <Route path="/detail/:id" element={
+            <Detail shoes={shoes} />
+          } />
+          <Route path="*" element={<div>404 오류 페이지</div>} />
 
-        <Route path="/about" element={<About />}>
-          <Route path="member" element={<div>멤버</div>} />
-          <Route path="location" element={<div>위치정보</div>} />
-        </Route>
+          <Route path="/about" element={<About />}>
+            <Route path="member" element={<div>멤버</div>} />
+            <Route path="location" element={<div>위치정보</div>} />
+          </Route>
 
-        <Route path="/event" element={<EventPage />}>
-          <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>}></Route>
-          <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
-        </Route>
+          <Route path="/event" element={<EventPage />}>
+            <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>}></Route>
+            <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
+          </Route>
 
-        <Route path='/cart' element={<Cart />} />
-      </Routes>
+          <Route path='/cart' element={<Cart />} />
+        </Routes>
+      </Suspense>
 
     </div >
   );
