@@ -11,9 +11,17 @@ const Detail = lazy(() => import('./routes/Detail.js'))
 const Cart = lazy(() => import('./routes/Cart.js'))
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
-let a = new Array(1000).fill(0)
+let a = new Array(3).fill(0)
 
 function App() {
+  let [count, setCount] = useState(0);
+  let [age, setAge] = useState(20);
+
+  useEffect(() => {
+    if (count != 0 && count < 3) {
+      setAge(age + 1)
+    }
+  }, [count])
 
   useEffect(() => {
     localStorage.setItem('watched', JSON.stringify([]))
@@ -53,6 +61,15 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
+
+      <div>
+        <div>안녕하십니까 전 {age}</div>
+        <button onClick={() => {
+
+          setCount(count + 1);
+
+        }}>누르면한살먹기</button>
+      </div>
 
       <div>
         <input onChange={(e) => {
