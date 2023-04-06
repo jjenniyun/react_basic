@@ -1,14 +1,13 @@
 import { createContext, useEffect, useState, lazy, Suspense, useTransition, useDeferredValue } from "react";
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
-import data from './data.js';
 //import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
 import { useQuery } from 'react-query'
 //import Cart from './routes/Cart.js';
-const Detail = lazy(() => import('./routes/Detail.js'))
-const Cart = lazy(() => import('./routes/Cart.js'))
+//const Detail = lazy(() => import('./routes/Detail.js'))
+//const Cart = lazy(() => import('./routes/Cart.js'))
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 let a = new Array(1000).fill(0)
